@@ -1,0 +1,46 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>菜鸟程序员的博客</title>
+    <script src="~/EasyUI/jquery.min.js"></script>
+    @*<link href="~/EasyUI/themes/icon.css" rel="stylesheet" />*@
+    <link href="~/CSS/Index.css" rel="stylesheet" />
+    @*<script src="~/EasyUI/jquery.min.js"></script>*@
+    <script src="~/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/JavaScript/Index.js"></script>   
+    @*<link href="~/zeroModal/zeroModal.css" rel="stylesheet" />
+    <script src="~/zeroModal/zeroModal.min.js"></script>*@
+    <link href="~/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/layui/layui.js"></script>
+</head>
+<body>
+    <div class="divhead">
+        <ul id="menu">
+            <li>
+                <a href="~/Index/Index">博客首页</a>
+
+            </li>
+            <li>
+                <a href="~/LearningNotes/Index" >学习笔记</a>
+            </li>
+            <li>
+                <a href="~/MessageBoard/Index">留言板</a>
+            </li>
+            <li>
+                <a href="~/AboutMe/Index">关于博主</a>
+            </li>
+        </ul>
+    </div>
+    <div style="width:80%;height:50px;margin:auto;margin-top:20px;">
+        <div style="display:inline-block;position:relative;top:5px;"><img src="~/Images/Logo/LocationLogo.png" style="" /></div>
+        <div id="daohang" style="display:inline-block;position:relative;top:0px;"><a href="/">首页</a></div>
+    </div>
+
+    <div id="content">
+        @RenderBody()
+    </div>
+</body>
+</html>

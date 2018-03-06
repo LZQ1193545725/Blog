@@ -1,0 +1,142 @@
+﻿@using Blog.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@System.Web.Optimization.Scripts.Render("~/EasyUI/jquery.min.js") 
+<hr style="width:80%;margin:auto;height:3px;background-color:green" />
+@if (Request.QueryString["id"] != null)
+{
+<div style="width:70%;border-radius: 4px;box-shadow: 1px 3px 9px #ccc;margin:auto">   
+    <div style="width:96%;margin:auto;">
+        @{ LearningNote data = ViewBag.Data;
+            <h2>@data.NotesTitle</h2>
+            <div style="font-size:small">
+              作者：<span style="color:orangered">@data.NotesAuthor</span>
+              <span style="margin-left:10px">时间：@data.CreateDate.ToString("yyyy-MM-dd HH:mm:ss")</span>
+              <span style="margin-left:10px">阅读（<span style="color:green">@data.NotesReadNum</span>）</span>
+              
+            </div>
+              <div style="font-family:STSong">@Html.Raw(@data.NotesContents)</div>
+            if (ViewBag.Count != 0&& ViewBag.Count!=null)
+            {
+                <hr style="width:100%;margin:auto;height:3px;background-color:green" />
+                <h3>评论<span style="color:green">@ViewBag.Count</span>条</h3>
+                <div id="pinglunqu" style="margin-left:50px">
+                    @foreach (Comment list in (ViewBag.Comment as List<Comment>))
+                    {
+                        
+                        if (list.ParentCommentID == 0)
+                        {
+                            <div name="CommentNo">
+                                <span>评论人</span><span style="color:#ef3327">@list.CommentAuthor</span>
+                                <span>评论时间：</span><span style="color:#0094ff">@list.CreateDate</span>
+                                <span>评论内容：</span><span style="color:#0fa76f">@list.CommentContents</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div  name="CommentNo">
+                                <span>评论人</span><span style="color:#ef3327">@list.CommentAuthor</span>
+                                <span>评论时间：</span><span style="color:#0094ff">@list.CreateDate</span>
+                                <span>回复<b style="text-decoration:underline;color:#9b22ef">@((ViewBag.Comment as List<Comment>).Where(p => p.CommentID == list.ParentCommentID).FirstOrDefault().CommentAuthor) </b>:</span><span style="color:#0fa76f">@list.CommentContents</span>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+            else
+            {
+                <hr style="width:100%;margin:auto;height:3px;background-color:green" />
+                <h3 style="text-align:center">还没有评论</h3>
+                }
+            }
+    </div>
+</div>
+}
+
+@if (Request.QueryString["id"] == null)
+{
+    <div id="LearningNotesList" style="width:70%;margin:auto">
+        @foreach (LearningNote data in ViewBag.Data)
+        {
+            <div style="width:100%;border-radius: 4px;box-shadow: 1px 3px 9px #ccc;margin-top:10px">
+                <div style="width:18%;height:140px;display:inline-block">
+                    <img src="~/Images/Logo/a.jpg" width="100%" height="100%" />
+                </div>
+                <div style="width:80%;margin-top:20px; margin-left:5px;display:inline-block;">
+                 <h3 style="display:inline">@data.NotesTitle</h3>
+                <div style="overflow:hidden;height:80px;word-wrap:break-word;font-size:small;" name="contents">@Html.Raw(data.NotesContents)</div>
+                <div style="height:18px"><a href="Index?id=@data.NotesID" style="color:#1a8328">阅读全文>></a></div>
+                </div>
+            </div>
+            <hr align="left" style="width:100%;color:green;height:1px;background-color:green" />
+        }
+    </div>
+    <div id="load" style="width:70%;margin:auto;text-align:center;background-color:#F0F0F0;cursor:pointer"><h3>加载学习笔记</h3> </div>
+}
+
+<script type="text/javascript">
+    layui.use('layer', function () {
+        var layer = layui.layer;
+    });              
+    $(function ()
+    {
+        $("div[name='contents']").each(function () {
+            $(this).html($(this).html().substring(0, 150) + "......")
+        })
+
+        $("#load").click(function ()
+        {
+            var num = $("#LearningNotesList").find("a").length;
+            var id = $("#LearningNotesList").find("a").eq(num - 1).attr("href").split("=")[1];
+            var str="";
+            $.ajax({
+                type: 'POST',
+                url: "Load",
+                data: {"id":id},
+                success: function (data)
+                {
+                    if (data.MessageContent == null) {
+                        for (var i = 0; i < data.length; i++) {
+                            str += '<div style="width:100%;border-radius: 4px;box-shadow: 1px 3px 9px #ccc;margin-top:10px"><div style="width:18%;height:140px;display:inline-block"><img src="../Images/Logo/a.jpg" width="150" height="140" /></div><div style="width:75%;margin-top:20px;margin-left:10px;display:inline-block;"><h3 style="display:inline">' + data[i].NotesTitle + '</h3><div style="overflow:hidden;height:80px;word-wrap:break-word;font-size:small;" name="contents">' + data[i].NotesContents + '</div><div style="height:18px"><a href="Index?id=' + data[i].NotesID + '" style="color:#1a8328">阅读全文>></a></div></div></div><hr align="left" style="width:100%;color:green;height:1px;background-color:green" />'
+                        }
+                        $("#LearningNotesList").append(str);
+                        $("div[name='contents']").each(function () {
+                            $(this).html($(this).html().substring(0, 150) + "......")
+                        })
+                    }
+                    else
+                    {
+                        layer.alert(data.MessageContent);
+                        //zeroModal.error(data.MessageContent);
+                        //alert(data.MessageContent)
+                    }
+                }
+
+            });
+
+        })
+
+        var num = $("div[name='CommentNo']").length;
+        for (var i = 3; i < num; i++)
+        {
+            $("div[name='CommentNo']").eq(i).css("display", "none");
+        }
+        if (num > 3)
+        {
+            $("div[name='CommentNo']").eq(3).after("<div id='load_comment' style='cursor:pointer'  onclick='ShowComment()'>加载评论</div>");
+        }
+    })
+    function ShowComment()
+    {
+        $("#load_comment").remove();
+        var num1 = $("div:visible[name='CommentNo']").length;
+        for (var i = 0; i < 3; i++)
+        {
+           $("div[name='CommentNo']").eq(num1+i).css("display", "block");
+        }
+        $("div[name='CommentNo']").eq(num1+2).after("<div id='load_comment' style='cursor:pointer'  onclick='ShowComment()'>加载评论</div>");
+        var h = $(document).height() - $(window).height();
+        $(document).scrollTop(h);
+    }
+</script>

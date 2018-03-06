@@ -1,0 +1,179 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Index.master.cs" Inherits="Blog.Views.Shared.Index" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+    <script src="~/EasyUI/jquery.min.js"></script>
+    <script src="~/EasyUI/jquery.easyui.min.js"></script>
+    <link href="~/EasyUI/themes/icon.css" rel="stylesheet" />
+    <link href="~/EasyUI/themes/default/easyui.css" rel="stylesheet" />
+    <style type="text/css">
+        .divhead {
+            width:80%;
+            height:50px;
+            margin:auto;
+            background:#6cc ;
+            border-radius: 5px;
+            box-shadow: 2px 2px 2px #bdbdbd
+        }
+        a {
+            color:black;
+            text-decoration:none;
+        }
+         #menu{
+            font-size: 18px;
+            font-weight: bold;
+            padding: 0px;
+        }
+        #menu li{
+            width:25%;
+            height:100%;
+            text-decoration: none;
+            list-style: none;
+            float:left;
+            text-align:center;
+        }
+        #menu li a{
+            color:#ffffff;
+            text-decoration: none;
+            height:40px;
+            line-height:50px;
+            height:50px;
+            width:100%;
+        }
+        .fouceme
+        {
+            width:80%;
+            margin:auto;
+            padding:0px;
+            display:inline-block;
+        }
+            .fouceme li {
+                 list-style: none;
+                 float:left;
+                 text-align:center;
+                 width:60px;
+                 height:60px;
+                 font-size:small;
+            }
+
+        .weibo {
+            background: transparent url("../../Images/Logo/weibologo.png") no-repeat top;
+            display:block;
+            padding-top:50px;
+
+        }
+
+    </style>
+    <script type="text/javascript">
+        var i = 1;
+        $(function ()
+        {
+            $("#menu li a").mouseover(function () {
+                $(this).parent("li").css({"background-color":"#F15694", "border-radius":"5px"});
+
+            })
+            $("#menu li a").mouseout(function () {
+                $(this).parent("li").css("background-color", "#6cc")
+            })
+            $("#menu li a").click(function ()
+            {
+                if ($("#daohang").text().indexOf(">") == -1) {
+                    $("#daohang").append("><a href='/'>" + $(this).html() + "</>");
+                }
+                else
+                {
+                    $("#daohang").html("<a href='/'>首页</a></div>");
+                    $("#daohang").append("><a href='/'>" + $(this).html() + "</>");
+                }
+            })
+            load();
+            $(window).resize(function () {
+                load();
+            });
+
+        })
+
+        function load()
+        {
+            var y = $("#view").offset().top;
+            var x = $("#view").offset().left;
+            var width = $("#view").width();
+            $("#view").children("img").attr({ "width": width + "px", "height": "300px", "top": y + "px", "left": x + "px" });
+            $("#my").css({ "position": "absolute", "top": y + "px", "left": x + width - 0.2 + "px" });
+            var x1 = $("#my").offset().left;
+            var width1 = $("#my").width();
+            $("#right_content").css({ "position": "absolute", "top": y + "px", "left": x1 + width1 + 20 + "px" })
+            window.setInterval(imgQH, 8000);
+        }
+
+        function imgQH()
+        {
+            $("#view").children("img").eq(i - 1).fadeOut(4000);
+            if (i >= 3)
+            {
+                i = 0;
+            }
+            $("#view").children("img").eq(i).fadeIn(4000);
+            i++;
+        }
+    </script>
+</head>
+<body>
+    <div class="divhead">
+        <ul id="menu">
+            <li>
+                <a href="#">博客首页</a>
+            </li>
+            <li>
+                <a href="#">学习笔记</a>
+            </li>
+            <li>
+                <a href="#">留言板</a>
+            </li>
+            <li>
+                <a href="#">关于博主</a>
+            </li>
+        </ul>
+    </div>
+    <div style="width:80%;height:50px;margin:auto;margin-top:20px;">
+        <div style="display:inline-block;position:relative;top:5px;"><img src="~/Images/Logo/LocationLogo.png" style="" /></div>
+        <div id="daohang" style="display:inline-block;position:relative;top:0px;"><a href="/">首页</a></div>
+    </div>
+    <div style="margin-top:20px;width:70%;margin:auto">
+        <div style="width:60%;height:300px;display:inline-block">
+            <a href="http://www.wyu.edu.cn/" target="_blank">
+                <div id="view" style="width:70%;height:100%;display:inline-block;">
+                    <img src="~/Images/Logo/view1.jpg" style="display:block;position:absolute;z-index:10" />
+                    <img src="~/Images/Logo/view2.jpg" style="display:none;position:absolute;z-index:10" />
+                    <img src="~/Images/Logo/view3.jpg" style="display:none;position:absolute;z-index:10" />
+                </div>
+            </a>
+            <div id="my" style="width:20%;height:300px;display:inline-block;z-index:5">
+                <div style="border:1px solid #ffcc00;width:100%;height:146px;overflow:hidden">
+                    <h3>关于博主</h3>
+                    <p style="font-family:KaiTi;font-size:medium">博主是一名刚毕业的程序员菜鸟，1992年出生，毕业于五邑大学，喜欢玩游戏</p>
+                </div>
+                <div style="border:1px solid #cceff5;width:100%;height:145px;margin-top:5px;overflow:hidden">
+                    <a href="http://www.wyu.edu.cn/"><h3>五邑大学</h3></a>
+                    <p style="font-family:KaiTi;font-size:medium;">五邑大学地处中国第一侨乡的广东省江门市，是珠江三角洲西岸唯一一所以工科为主的多科性教学型地方大学，广东省省市共建本科高校。</p>
+                </div>
+            </div>
+        </div>
+        <div id="right_content" style="width:20%;display:inline-block;height:200px">
+            <div>
+                <h3>关注我</h3>
+                <hr style="width:100%" />
+                <ul class="fouceme">
+                    <li><a href="http://weibo.com/u/3866239389" class="weibo" target="_blank">新浪微博</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

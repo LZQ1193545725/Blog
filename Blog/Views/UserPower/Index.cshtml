@@ -1,0 +1,13 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    layui.use('layer', function () {
+        var layer = layui.layer;   
+        layer.msg('你的IP地址不够帅，不能访问', {
+            time: 60000,
+            anim: 2
+        });
+    }); 
+</script>
